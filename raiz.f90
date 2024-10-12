@@ -1,52 +1,49 @@
 PROGRAM raiz
+    IMPLICIT NONE 
+    
+    REAL :: a, b, c !variáveis da expressão
+    REAL :: x1, x2 !variáveis do resultado
+    REAL :: delta !variável para calcular o delta da expressão
+    REAL :: sq !variável para calcular a raíz quadrada do delta
 
-	IMPLICIT NONE 
+    PRINT*, 'Considerando "a" como sendo o coeficiente quadrático (determina a concavidade da parábola).'
+    PRINT*, 'Considerando "b" como sendo o coeficiente linear (influencia a inclinaçào da parábola).'
+    PRINT*, 'E considerando "c" como sendo o ponto em que a parábola intercepta o eixo y.'
+    PRINT*, 'Lembre-se que as raízes são encontradas de tal maneira que y = 0:' 
+    PRINT*, 'Tomando como base a expressão ax^2 + bx + c, digite valores para a, b e c, a fim de descobrir as raízes da função.' 
+    READ*, a, b, c !recebe os valores de a, b e c
+    
+    delta = b*b-4*a*c !calcula o delta da expressão
 	
-	REAL :: a, b, c !variáveis da expressão
-	REAL :: x1, x2 !variáveis do resultado
-	REAL :: delta !variável para calcular o delta da expressão
-	REAL :: sq !variável para calcular a raíz quadrada do delta
+    IF(delta < 0) THEN !caso o delta seja menor do que 0, não há raiz real
 	
-	WRITE(*,*) 'Considerando "a" como sendo o coeficiente quadrático (determina a concavidade da parábola).'
-	WRITE(*,*) 'Considerando "b" como sendo o coeficiente linear (influencia a inclinaçào da parábola).'
-	WRITE(*,*) 'E considerando "c" como sendo o ponto em que a parábola intercepta o eixo y.'
-	WRITE(*,*) 'Lembre-se que as raízes são encontradas de tal maneira que y = 0:' 
-	WRITE(*,*) 'Tomando como base a expressão ax^2 + bx + c, digite valores para a, b e c, a fim de descobrir as raízes da função.' 
-	
-	READ(*,*) a, b, c !recebe os valores de a, b e c
+        PRINT*, 'O delta é negativo, logo não existe raiz real'
+					
+    ELSE IF(delta == 0) THEN !caso o delta seja igual a 0, há somente uma raiz real
 
-	delta = b*b-4*a*c !calcula o delta da expressão
+        x1 = -b / (2 * a) !cálculo de x1 pela fórmula de bhaskara. Como o delta é igual a 0,
+	                  !o valor de x1 = x2, por isso, basta calcular somente de um deles
+
+        PRINT*,'A expressão possui uma única raiz, ou então duas raízes de mesmo valor, com x1 = x2 = ', x1
 		
-	IF(delta < 0) THEN !caso o delta seja menor do que 0, não há raiz real
-		
-		WRITE(*,*) 'O delta é negativo, logo não existe raiz real'
-						
-	ELSEIF(delta == 0) THEN !caso o delta seja igual a 0, há somente uma raiz real
+    ELSE !caso delta não seja menor ou igual a 0, então a equação tem duas raízes reais
 	
-		x1 = -b / (2 * a) !cálculo de x1 pela fórmula de bhaskara. Como o delta é igual a 0,
-						  !o valor de x1 = x2, por isso, basta calcular somente de um deles
-			
-		WRITE(*,*)'A expressão possui uma única raiz, ou então duas raízes de mesmo valor, com x1 = x2 = ', x1
-		
-	ELSE !caso delta não seja menor ou igual a 0, então a equação tem duas raízes reais
-		
-		sq = SQRT(delta) !calcula a raiz quadrada de delta
-		
-		x1 = (-b + sq) / (2 * a) !cálculo de x1
-			
-		x2 = (-b - sq) / (2 * a) !cálculo de x2
-			
-		WRITE(*,*)'O valor de x1 é ', x1, 'e x2 vale ', x2
-		
-	END IF
+        sq = SQRT(delta) !calcula a raiz quadrada de delta
 	
-	CALL grafico(a, b, c)
-	
+        x1 = (-b + sq) / (2 * a) !cálculo de x1
+
+        x2 = (-b - sq) / (2 * a) !cálculo de x2
+
+        PRINT*,'O valor de x1 é ', x1, 'e x2 vale ', x2
+
+    ENDIF
+
+    CALL grafico(a, b, c)
 END PROGRAM raiz
 
 SUBROUTINE grafico(a, b, c)
-
     IMPLICIT NONE
+    
     REAL, INTENT(in) :: a, b, c
     INTEGER :: ios
     CHARACTER(len=50) :: command
@@ -71,5 +68,4 @@ SUBROUTINE grafico(a, b, c)
     command = 'gnuplot -persist plot_commands.gp'
 
     call system(command)
-    
 end subroutine grafico
